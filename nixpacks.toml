@@ -1,3 +1,3 @@
-[phases.start]
+[start]
 cmds = ["python app.py"]
 
