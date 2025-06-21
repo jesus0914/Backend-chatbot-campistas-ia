@@ -4,7 +4,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)  # Habilita CORS para todas las rutas
 
-# Respuestas predefinidas del chatbot
 respuestas = {
     "inscripcion_si": "¡Genial! Ya estás listo para comenzar. Revisa tu correo para los siguientes pasos.",
     "inscripcion_no": "Puedes inscribirte en el formulario oficial que te compartimos por correo o en la web del bootcamp.",
@@ -18,25 +17,25 @@ respuestas = {
     "otra": "Lo siento, por ahora solo puedo ayudarte con dudas sobre inscripción, contenidos, horarios y certificación.",
 }
 
-# Estado simple por sesión (global para simplificar)
 estado_sesion = {
     "esperando_inscripcion": False,
     "esperando_certificado": False,
 }
 
-# Permitir respuestas adecuadas para CORS y OPTIONS
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')  # o especificar el origen
+    response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
     return response
 
-# Ruta principal del chatbot
-@app.route("/api/chatbot", methods=['POST', 'OPTIONS'])
+@app.route("/", methods=["GET"])
+def index():
+    return jsonify({"message": "Chatbot backend funcionando"})
+
+@app.route("/api/chatbot", methods=["POST", "OPTIONS"])
 def chatbot():
     if request.method == 'OPTIONS':
-        # Respuesta para preflight
         return '', 204
 
     if not request.is_json:
@@ -45,7 +44,6 @@ def chatbot():
     data = request.get_json()
     pregunta = data.get("pregunta", "").lower().strip()
 
-    # Lógica del chatbot
     if estado_sesion["esperando_inscripcion"]:
         if pregunta in ["sí", "si", "ya me inscribí", "me inscribí"]:
             estado_sesion["esperando_inscripcion"] = False
@@ -66,7 +64,6 @@ def chatbot():
         else:
             return jsonify({"respuesta": "Por favor responde con 'sí' o 'no'."})
 
-    # Interpretar la pregunta del usuario
     if "inscripción" in pregunta or "inscribirme" in pregunta or "inscribí" in pregunta:
         estado_sesion["esperando_inscripcion"] = True
         return jsonify({"respuesta": "¿Ya te inscribiste? Responde con 'sí' o 'no'."})
@@ -86,6 +83,5 @@ def chatbot():
     else:
         return jsonify({"respuesta": respuestas["otra"]})
 
-# Inicia el servidor local
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
