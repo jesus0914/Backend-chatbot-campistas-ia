@@ -5,6 +5,7 @@ import os
 app = Flask(__name__)
 CORS(app)
 
+# Respuestas predefinidas del chatbot
 respuestas = {
     "inscripcion_si": "¡Genial! Ya estás listo para comenzar. Revisa tu correo para los siguientes pasos.",
     "inscripcion_no": "Puedes inscribirte en el formulario oficial que te compartimos por correo o en la web del bootcamp.",
