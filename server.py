@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app)  # Habilita CORS para todas las rutas
 
+# Respuestas predefinidas del chatbot
 respuestas = {
     "inscripcion_si": "¡Genial! Ya estás listo para comenzar. Revisa tu correo para los siguientes pasos.",
     "inscripcion_no": "Puedes inscribirte en el formulario oficial que te compartimos por correo o en la web del bootcamp.",
@@ -17,11 +19,13 @@ respuestas = {
     "otra": "Lo siento, por ahora solo puedo ayudarte con dudas sobre inscripción, contenidos, horarios y certificación.",
 }
 
+# Estado simple de sesión (global para ejemplo básico)
 estado_sesion = {
     "esperando_inscripcion": False,
     "esperando_certificado": False,
 }
 
+# Middleware para permitir OPTIONS (preflight)
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
@@ -29,11 +33,7 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
     return response
 
-@app.route("/", methods=["GET"])
-def index():
-    return jsonify({"message": "Chatbot backend funcionando"})
-
-@app.route("/api/chatbot", methods=["POST", "OPTIONS"])
+@app.route("/api/chatbot", methods=['POST', 'OPTIONS'])
 def chatbot():
     if request.method == 'OPTIONS':
         return '', 204
@@ -44,6 +44,7 @@ def chatbot():
     data = request.get_json()
     pregunta = data.get("pregunta", "").lower().strip()
 
+    # Respuesta según estado de sesión
     if estado_sesion["esperando_inscripcion"]:
         if pregunta in ["sí", "si", "ya me inscribí", "me inscribí"]:
             estado_sesion["esperando_inscripcion"] = False
@@ -64,6 +65,7 @@ def chatbot():
         else:
             return jsonify({"respuesta": "Por favor responde con 'sí' o 'no'."})
 
+    # Procesamiento general
     if "inscripción" in pregunta or "inscribirme" in pregunta or "inscribí" in pregunta:
         estado_sesion["esperando_inscripcion"] = True
         return jsonify({"respuesta": "¿Ya te inscribiste? Responde con 'sí' o 'no'."})
@@ -83,5 +85,7 @@ def chatbot():
     else:
         return jsonify({"respuesta": respuestas["otra"]})
 
+# Inicia la app en entorno Railway o local
 if __name__ == "__main__":
-    app.run(debug=True, port=8080)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port, debug=True)
