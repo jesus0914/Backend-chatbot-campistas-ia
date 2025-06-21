@@ -16,7 +16,7 @@ respuestas = {
     "virtual": "Las sesiones virtuales son asincrónicas, con encuentros en vivo los miércoles a las 6pm.",
     "cert_si": "¡Felicitaciones! Estás listo para recibir tu certificado digital.",
     "cert_no": "Recuerda completar todos los módulos para poder certificarte.",
-    "otra": "Lo siento, por ahora solo puedo ayudarte con dudas sobre inscripción, contenidos, horarios y certificación.",
+    "otra": "¡Gracias por tu mensaje! Por ahora solo puedo ayudarte con dudas sobre inscripción, contenidos, horarios y certificación.",
 }
 
 # Estado simple de sesión (global para ejemplo básico)
