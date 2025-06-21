@@ -5,6 +5,11 @@ import os
 app = Flask(__name__)
 CORS(app)
 
+# Ruta raíz para verificar que el servidor está activo
+@app.route("/")
+def index():
+    return "Backend chatbot corriendo"
+
 # Respuestas predefinidas del chatbot
 respuestas = {
     "inscripcion_si": "¡Genial! Ya estás listo para comenzar. Revisa tu correo para los siguientes pasos.",
@@ -81,7 +86,6 @@ def chatbot():
     else:
         return jsonify({"respuesta": respuestas["otra"]})
 
-# ¡Eliminamos el bloque app.run para producción con gunicorn!
-# if __name__ == "__main__":
-#     port = int(os.environ.get("PORT", 8080))
-#     app.run(host="0.0.0.0", port=port)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
