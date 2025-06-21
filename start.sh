@@ -1,2 +1,3 @@
+
 #!/bin/sh
-python3 server.py
+exec gunicorn server:app -b 0.0.0.0:8080
