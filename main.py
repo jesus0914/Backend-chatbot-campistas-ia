@@ -81,7 +81,7 @@ def chatbot():
     else:
         return jsonify({"respuesta": respuestas["otra"]})
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port)
-
+# ¡Eliminamos el bloque app.run para producción con gunicorn!
+# if __name__ == "__main__":
+#     port = int(os.environ.get("PORT", 8080))
+#     app.run(host="0.0.0.0", port=port)
