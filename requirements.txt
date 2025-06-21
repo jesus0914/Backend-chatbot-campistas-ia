@@ -1,2 +1,9 @@
 flask
 flask-cors
+fastapi>=0.100.0
+uvicorn[standard]>=0.20.0
+transformers>=4.32.0
+torch>=2.0.0
+python-dotenv
+gunicorn
+gunicorn main:app --bind 0.0.0.0:$PORT
